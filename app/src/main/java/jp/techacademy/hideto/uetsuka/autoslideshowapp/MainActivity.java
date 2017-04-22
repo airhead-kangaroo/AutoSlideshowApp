@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     init();
                 } else {
-                    Toast.makeText(this,"ファイル読み込みが許可されていません",Toast.LENGTH_LONG);
+                    Toast.makeText(this,"ファイル読み込みが許可されていません",Toast.LENGTH_LONG).show();
                     setButtonState(false,false,false);
                 }
                 break;
