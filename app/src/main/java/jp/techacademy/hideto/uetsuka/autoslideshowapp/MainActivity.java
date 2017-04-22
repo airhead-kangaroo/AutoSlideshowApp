@@ -48,16 +48,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init(){
-        initImageUri();
-        setButtonState(true,true,true);
-        isTimerOn = false;
-        mHandler = new Handler();
-        imageNumber = imageList.size();
-        imageView = (ImageView)findViewById(R.id.imageArea);
-        showImage();
+        if(initImageUri()){
+            setButtonState(true,true,true);
+            isTimerOn = false;
+            mHandler = new Handler();
+            imageNumber = imageList.size();
+            imageView = (ImageView)findViewById(R.id.imageArea);
+            showImage();
+        }else{
+            setButtonState(false,false,false);
+        }
+
     }
 
-    private void initImageUri(){
+    private boolean initImageUri(){
         ContentResolver resolver = getContentResolver();
         Cursor cursor = resolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -66,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 null,
                 null
         );
-        //if(cursor.moveToFirst()){
+        if(cursor.moveToFirst()){
         cursor.moveToFirst();
             do{
                 int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
@@ -74,7 +78,11 @@ public class MainActivity extends AppCompatActivity {
                 Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
                 imageList.add(imageUri);
             }while(cursor.moveToNext());
-        //}
+            return true;
+        }else{
+            Toast.makeText(this,"ファイル読み込みでエラーが発生しました",Toast.LENGTH_LONG);
+            return false;
+        }
     }
 
     private void checkPermission(){
